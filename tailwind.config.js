@@ -5,7 +5,11 @@ export default {
     "./src/**/*.{svelte, js, svelte.js}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        spaceGrotesk: ['SpaceGrotesk', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 }
