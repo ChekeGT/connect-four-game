@@ -15,6 +15,9 @@ export default {
         mainRed: '#FD6687',
         mainYellow: '#FFCE67',
       },
+      gridTemplateColumns: {
+        'rules-grid': '1fr 9fr'
+      }
     },
   },
   plugins: [],

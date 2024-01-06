@@ -6,7 +6,7 @@
     
     let gameModeText = $derived(game.gameMode == 'PvP' ? 'Play vs Player' : 'Play vs CPU');
     let gameModeIcon = $derived(game.gameMode == 'PvP' ? playerVsPlayerSvg : playerVsCpuSvg);
-    
+
 </script>
 <div class="w-full h-full flex items-center justify-center">
     <div class=" w-11/12 mx-auto flex flex-col gap-8">
@@ -22,7 +22,7 @@
                     <img class=" w-full" src={gameModeIcon} alt="">
                 </button>
             </div>
-            <button class="button bg-white rounded-2xl p-3 shadow-lg flex justify-start text-xl font-bold">
+            <button on:click={game.toggleShowRules} class="button bg-white rounded-2xl p-3 shadow-lg flex justify-start text-xl font-bold">
                 <p class="font-spaceGrotesk">Game Rules</p>
             </button>
         </div>
