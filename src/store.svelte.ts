@@ -11,12 +11,14 @@ interface boardInterface {
     [x: string]: pieces
 }
 
-function createGame(){
-    let gameMode: GameMode = $state("PvP");
-    let isPlaying: boolean = $state(false);
-    let showRules: boolean = $state(false);
+interface timerInterface{
+    time: number,
+    timer: any
+}
 
-    let currentPlayer: playerTypes = $state('PlayerOne');
+type gameStates = 'generalMenu' | 'playingMenu' | 'showRules' | 'playing' | 'gameOver';
+
+function createBoard(){
     let board: boardInterface = $state({});
     for (let r = 0; r <= 5; r++) {
         for (let c = 0; c <= 6; c++) {
@@ -24,8 +26,26 @@ function createGame(){
             board[key] = 'empty'
         }
     }
+    return board;
+}
+
+function createGame(){
+    let gameMode: GameMode = $state("PvP");
+    let isPlaying: boolean = $state(false);
+    let gameState: gameStates = $state('generalMenu');
+
+    let showRules: boolean = $state(false);
+    
+
+    let currentPlayer: playerTypes = $state('PlayerOne');
+    let playerOneScore: number = $state(0);
+    let playerTwoScore: number = $state(0);
+
+    let board: boardInterface = createBoard();
+    let turnTimer: timerInterface = $state({time: 0, timer: 0});
     let winner: winnerInteface = $derived(getWinner(board));
 
+    const switchCurrentPlayer = () => {currentPlayer = currentPlayer == 'PlayerOne' ? 'PlayerTwo' : 'PlayerOne';}
     function getColumns() {
         let columns = [];
         for (let c = 0; c <= 6; c++) {
@@ -105,12 +125,12 @@ function createGame(){
         return diagonals;
     }
 
-    function getWinner(board){
+    function getWinner(board: boardInterface){
         let winner = {
             winner: null,
             pieces: []
         };
-        const lines = [...getDiagonals(board), ...getRows(board), ...getColumns(board)];
+        const lines = [...getDiagonals(), ...getRows(), ...getColumns()];
         lines.forEach(line => {
             let playerOnePieces = [];
             let playerTwoPieces = [];
@@ -129,7 +149,13 @@ function createGame(){
                 winner = ({winner: 'PlayerTwo', pieces: playerTwoPieces});
             }
         });
-
+        if (winner.winner){
+            if (winner.winner == 'PlayerOne'){
+                playerOneScore++;
+            }else{
+                playerTwoScore++;
+            }
+        }
         return winner;
     }
 
@@ -142,9 +168,25 @@ function createGame(){
     }
     function toggleIsPlaying(){
         isPlaying = !isPlaying;
+        if (isPlaying == true){
+            
+        }
     }
     function toggleShowRules(){
         showRules = !showRules;
+    }
+
+    function playPiece(column: number){
+        let r = 5;
+        let key = `${r},${column}`;
+        while (board[key] != 'empty' && r >= 0){
+            r--;
+            key = `${r},${column}`;
+        }
+        if (r >= 0){
+            board[key] = currentPlayer;
+            switchCurrentPlayer();
+        }
     }
 
     return {
@@ -155,9 +197,26 @@ function createGame(){
         get showRules(){return showRules},
         get board(){return board},
         get winner(){return winner},
+        get gameState(){return gameState},
+        set gameState(v){
+            if (v == 'generalMenu' || v == 'showRules'){
+                clearTimeout(turnTimer.timer);
+                turnTimer.time = 0;
+                turnTimer.timer = 0;
+            }else if(v == 'playing'){
+                turnTimer.timer = setTimeout(() => {
+                    turnTimer.time--;
+                }, 1000);
+            }else{
+                clearTimeout(turnTimer.timer);
+                turnTimer.timer = 0;
+            }
+            gameState = v
+        },
         switchGameMode,
         toggleIsPlaying,
         toggleShowRules,
+        playPiece
     }
 }
 
