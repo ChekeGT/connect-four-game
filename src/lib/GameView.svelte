@@ -2,6 +2,23 @@
     import logoSvg from '../assets/images/logo.svg'; 
     import playerOne from '../assets/images/player-one.svg';
     import playerTwo from '../assets/images/player-two.svg';
+    import { game } from '../store.svelte'
+
+    $effect(() => {
+        game.gameState;
+        clearTimerAndSwitchPlayer()
+    })
+
+    function clearTimerAndSwitchPlayer(){
+        if (game.gameState == 'playing'){
+            clearInterval(game.turnTimer.timer)
+            game.turnTimer.time = 30
+            game.switchCurrentPlayer();
+            game.turnTimer.timer = setInterval(() => {
+                game.turnTimer.time--
+            }, 1000);
+        }
+    }
 </script>
 <div class="w-11/12 mx-auto py-10 flex flex-col gap-8">
     <div class="flex justify-between text-white font-spaceGrotesk text-xl font-bold">

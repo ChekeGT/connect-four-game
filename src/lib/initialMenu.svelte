@@ -2,7 +2,7 @@
     import logoSvg from '../assets/images/logo.svg';
     import playerVsPlayerSvg from '../assets/images/player-vs-player.svg'
     import playerVsCpuSvg from '../assets/images/player-vs-cpu.svg'
-    import { game } from '../store.svelte.ts'
+    import { game } from '../store.svelte'
     
     let gameModeText = $derived(game.gameMode == 'PvP' ? 'Play vs Player' : 'Play vs CPU');
     let gameModeIcon = $derived(game.gameMode == 'PvP' ? playerVsPlayerSvg : playerVsCpuSvg);

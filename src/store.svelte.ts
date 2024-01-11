@@ -163,9 +163,6 @@ function createGame(){
             gameMode = 'PvE';
         }
     }
-    function toggleShowRules(){
-        showRules = !showRules;
-    }
 
     function playPiece(column: number){
         let r = 5;
@@ -205,7 +202,6 @@ function createGame(){
         get turnTimer(){return turnTimer},
         set turnTimer(v){turnTimer = v},
         switchGameMode,
-        toggleShowRules,
         playPiece,
         switchCurrentPlayer
     }
