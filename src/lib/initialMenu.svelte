@@ -15,14 +15,14 @@
         </div>
         <div class="flex flex-col gap-4">
             <div class={`button ${game.gameMode == 'PvP' ? 'bg-mainYellow' : 'bg-mainRed text-white'} rounded-2xl p-3 flex justify-between items-center font-bold text-xl`}>
-                <button on:click={game.toggleIsPlaying}>
+                <button on:click={() => {game.gameState = 'playing'}}>
                     <p class=" font-spaceGrotesk">{gameModeText}</p>
                 </button>
                 <button on:click={game.switchGameMode} class="w-[15%]">
                     <img class=" w-full" src={gameModeIcon} alt="">
                 </button>
             </div>
-            <button on:click={game.toggleShowRules} class="button bg-white rounded-2xl p-3 shadow-lg flex justify-start text-xl font-bold">
+            <button on:click={() => {game.gameState = 'showRules'}} class="button bg-white rounded-2xl p-3 shadow-lg flex justify-start text-xl font-bold">
                 <p class="font-spaceGrotesk">Game Rules</p>
             </button>
         </div>

@@ -22,7 +22,7 @@
                 <li class="text-sm">The starter of the previous game goes second on the next game.</li>
             </div>
         </ol>
-        <button on:click={game.toggleShowRules} class="w-2/12 absolute bottom-[-28px] left-[50%] translate-x-[-50%]">
+        <button on:click={() => {game.gameState = 'initialMenu'}} class="w-2/12 absolute bottom-[-28px] left-[50%] translate-x-[-50%]">
             <img src={checkmark} class="w-full" alt="">
         </button>
     </div>

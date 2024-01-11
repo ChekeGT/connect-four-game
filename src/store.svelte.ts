@@ -16,7 +16,7 @@ interface timerInterface{
     timer: any
 }
 
-type gameStates = 'generalMenu' | 'playingMenu' | 'showRules' | 'playing' | 'gameOver';
+type gameStates = 'initialMenu' | 'playingMenu' | 'showRules' | 'playing' | 'gameOver';
 
 function createBoard(){
     let board: boardInterface = $state({});
@@ -31,10 +31,7 @@ function createBoard(){
 
 function createGame(){
     let gameMode: GameMode = $state("PvP");
-    let isPlaying: boolean = $state(false);
-    let gameState: gameStates = $state('generalMenu');
-
-    let showRules: boolean = $state(false);
+    let gameState: gameStates = $state('initialMenu');
     
 
     let currentPlayer: playerTypes = $state('PlayerOne');
@@ -166,12 +163,6 @@ function createGame(){
             gameMode = 'PvE';
         }
     }
-    function toggleIsPlaying(){
-        isPlaying = !isPlaying;
-        if (isPlaying == true){
-            
-        }
-    }
     function toggleShowRules(){
         showRules = !showRules;
     }
@@ -193,13 +184,11 @@ function createGame(){
         get gameMode(){
             return gameMode;
         },
-        get isPlaying(){return isPlaying},
-        get showRules(){return showRules},
         get board(){return board},
         get winner(){return winner},
         get gameState(){return gameState},
         set gameState(v){
-            if (v == 'generalMenu' || v == 'showRules'){
+            if (v == 'initialMenu' || v == 'showRules'){
                 clearTimeout(turnTimer.timer);
                 turnTimer.time = 0;
                 turnTimer.timer = 0;
@@ -213,10 +202,12 @@ function createGame(){
             }
             gameState = v
         },
+        get turnTimer(){return turnTimer},
+        set turnTimer(v){turnTimer = v},
         switchGameMode,
-        toggleIsPlaying,
         toggleShowRules,
-        playPiece
+        playPiece,
+        switchCurrentPlayer
     }
 }
 
