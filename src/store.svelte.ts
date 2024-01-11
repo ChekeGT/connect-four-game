@@ -1,15 +1,143 @@
 type GameMode = "PvE" | "PvP";
+type playerTypes = 'PlayerOne' | 'PlayerTwo' | null;
+
+type pieces = 'empty' | 'PlayerOne' | 'PlayerTwo';
+export interface winnerInteface {
+    winner: playerTypes,
+    pieces: string[]
+}
+
+interface boardInterface {
+    [x: string]: pieces
+}
 
 function createGame(){
     let gameMode: GameMode = $state("PvP");
     let isPlaying: boolean = $state(false);
     let showRules: boolean = $state(false);
 
+    let currentPlayer: playerTypes = $state('PlayerOne');
+    let board: boardInterface = $state({});
+    for (let r = 0; r <= 5; r++) {
+        for (let c = 0; c <= 6; c++) {
+            let key = `${r},${c}`;
+            board[key] = 'empty'
+        }
+    }
+    let winner: winnerInteface = $derived(getWinner(board));
+
+    function getColumns() {
+        let columns = [];
+        for (let c = 0; c <= 6; c++) {
+            let column = [];
+            for (let r = 0; r <= 5; r++) {
+                let key = `${r},${c}`;
+                column.push([key, board[key]]);
+            }
+            columns.push(column);
+        }
+        return columns;
+    }
+
+    function getRows() {
+        let rows = []
+        for (let r = 0; r <= 5; r++) {
+            let row = [];
+            for (let c = 0; c <= 6; c++) {
+                let key = `${r},${c}`;
+                row.push([key, board[key]]);
+            }
+            rows.push(row);
+        }
+        return rows; 
+    }
+
+    function getDiagonals() {
+        // Convert the board object into a 2D array
+        let matrix = [];
+        for (let r = 0; r <= 5; r++) {
+            let row = [];
+            for (let c = 0; c <= 6; c++) {
+                let key = `${r},${c}`;
+                row.push(board[key]);
+            }
+            matrix.push(row);
+        }
+        let diagonals = [];
+
+    // Get diagonals from top-left to bottom-right
+    for (let i = 0; i < matrix.length; i++) {
+        let diagonal = [];
+        for (let j = 0; j <= i && j < matrix[0].length; j++) {
+            diagonal.push(matrix[i - j][j]);
+        }
+        diagonals.push(diagonal);
+    }
+
+        for (let i = 1; i < matrix[0].length; i++) {
+            let diagonal = [];
+            for (let j = 0; j < matrix.length && i + j < matrix[0].length; j++) {
+                let key = `${matrix.length -1 - j},${i + j}`;
+                diagonal.push([key, matrix[matrix.length - 1 - j][i + j]]);
+            }
+            diagonals.push(diagonal);
+        }
+
+        // Get diagonals from top-right to bottom-left
+        for (let i = 0; i < matrix.length; i++) {
+            let diagonal = [];
+            for (let j = 0; j <= i && j < matrix[0].length; j++) {
+                let key = `${i - j},${matrix[0].length - 1 - j}`;
+                diagonal.push([key, matrix[i - j][matrix[0].length - 1 - j]]);
+            }
+            diagonals.push(diagonal);
+        }
+
+        for (let i = 1; i < matrix[0].length; i++) {
+            let diagonal = [];
+            for (let j = 0; j < matrix.length && i + j < matrix[0].length; j++) {
+                let key = `${j},${matrix[0].length - 1 - i - j}`;
+                diagonal.push([key, matrix[j][matrix[0].length - 1 - i - j]]);
+            }
+            diagonals.push(diagonal);
+        }
+
+        return diagonals;
+    }
+
+    function getWinner(board){
+        let winner = {
+            winner: null,
+            pieces: []
+        };
+        const lines = [...getDiagonals(board), ...getRows(board), ...getColumns(board)];
+        lines.forEach(line => {
+            let playerOnePieces = [];
+            let playerTwoPieces = [];
+            line.forEach(element => {
+                if (element[1] == 'PlayerOne'){
+                    playerOnePieces.push(element[0]);
+                    playerTwoPieces = []; 
+                }else if (element[1] == 'PlayerTwo'){
+                    playerTwoPieces.push(element[0]);
+                    playerOnePieces = [];
+                }
+            });
+            if (playerOnePieces.length == 4){
+                winner =  ({winner: 'PlayerOne', pieces: playerOnePieces});
+            }else if (playerTwoPieces.length == 4){
+                winner = ({winner: 'PlayerTwo', pieces: playerTwoPieces});
+            }
+        });
+
+        return winner;
+    }
+
     function switchGameMode(){
         if(gameMode == 'PvE'){
-            gameMode = 'PvP'
+            gameMode = 'PvP';
         }else{
-            gameMode = 'PvE'
+            gameMode = 'PvE';
         }
     }
     function toggleIsPlaying(){
@@ -25,9 +153,11 @@ function createGame(){
         },
         get isPlaying(){return isPlaying},
         get showRules(){return showRules},
+        get board(){return board},
+        get winner(){return winner},
         switchGameMode,
         toggleIsPlaying,
-        toggleShowRules
+        toggleShowRules,
     }
 }
 
