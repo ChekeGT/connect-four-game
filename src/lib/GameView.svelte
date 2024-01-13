@@ -48,8 +48,9 @@
     let winnerCardHeight = $state();
     let boardImageHeight = $state();
     let turnImageHeight = $state(); 
+    let containerHeight = $state();
 </script>
-<div class="w-11/12 mx-auto py-10 flex flex-col gap-8">
+<div bind:clientHeight={containerHeight} class="w-11/12 mx-auto py-10 flex flex-col gap-8">
     <div class="flex justify-between text-white font-spaceGrotesk text-xl font-bold">
         <button class=" rounded-[20px] bg-darkPurple min-w-[108px]">MENU</button>
         <img class="w-[40px] h-[40px]" src={logoSvg} alt="">
@@ -111,7 +112,8 @@
         </div>
     </div>
 </div>
-
+<div class={`absolute bottom-0 w-full rectangle ${game.winner.winner == 'PlayerOne' ? 'bg-mainRed' : game.winner.winner == 'PlayerTwo' ? 'bg-mainYellow' : 'bg-darkPurple'}`} style={`height: ${window.innerHeight - containerHeight + 16 * 4 }px`}>
+</div>
 
 <style>
     .player-card{
@@ -119,5 +121,8 @@
         border: 3px solid var(--Black, #000);
         background: var(--White, #FFF);
         box-shadow: 0px 10px 0px 0px #000;
+    }
+    .rectangle{
+        border-radius: 60px 60px 0px 0px;
     }
 </style>
