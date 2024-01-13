@@ -1,9 +1,11 @@
 type GameMode = "PvE" | "PvP";
 type playerTypes = 'PlayerOne' | 'PlayerTwo' | null;
 
+type winnerTypes = 'PlayerOne' | 'PlayerTwo' | 'draw'
+
 type pieces = 'empty' | 'PlayerOne' | 'PlayerTwo';
 export interface winnerInteface {
-    winner: playerTypes,
+    winner: winnerTypes,
     pieces: number[]
 }
 
@@ -117,16 +119,23 @@ function createGame(){
             pieces: []
         };
         const lines = [...getDiagonals(), ...getRows(), ...getColumns()];
+        console.log(...getRows())
         lines.forEach(line => {
             let playerOnePieces = [];
             let playerTwoPieces = [];
             line.forEach(element => {
+                if (playerOnePieces.length == 4 || playerTwoPieces.length == 4){
+                    return;
+                }
                 if (element[1] == 'PlayerOne'){
                     playerOnePieces.push(element[0]);
                     playerTwoPieces = []; 
                 }else if (element[1] == 'PlayerTwo'){
                     playerTwoPieces.push(element[0]);
                     playerOnePieces = [];
+                }else{
+                    playerOnePieces = [];
+                    playerTwoPieces = [];
                 }
             });
             if (playerOnePieces.length == 4){
@@ -141,6 +150,13 @@ function createGame(){
             }else{
                 playerTwoScore++;
             }
+            gameState = 'gameOver';
+            clearInterval(turnTimer.timer);
+        }else if (board.every(row => row.every(column => column != 'empty'))){
+            gameState = 'gameOver';
+            clearInterval(turnTimer.timer);
+            winner.winner = 'draw'
+            winner.pieces = []
         }
         return winner;
     }
@@ -154,6 +170,9 @@ function createGame(){
     }
 
     function playPiece(row:number, column: number){
+        if (gameState == 'gameOver'){
+            return;
+        }
         const isPieceTheLastOne = (row:number, column:number) => {
             if (row == 0){
                 if (board[1][column] != 'empty'){
@@ -196,7 +215,13 @@ function createGame(){
             }
         }
         currentPlayer = 'PlayerOne'
+        gameState = 'playing'
         setTimer(30)
+    }
+
+    function playAgain(){
+        resetBoard()
+        gameState = 'playing'
     }
     return {
         get gameMode(){
@@ -225,7 +250,8 @@ function createGame(){
         switchGameMode,
         playPiece,
         switchCurrentPlayer,
-        resetBoard
+        resetBoard,
+        playAgain
     }
 }
 

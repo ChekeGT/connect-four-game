@@ -33,8 +33,19 @@
         }
     }
 
-    let currentPlayerText = $derived(getCurrentPlayerText(game.currentPlayer))
+    function getWinnerPlayer(winner){
+        console.log(game.winner.winner);
+        if (winner == 'PlayerOne'){
+            return 'PLAYER 1'
+        }else{
+            return 'PLAYER 2'
+        }
+    }
 
+    let currentPlayerText = $derived(getCurrentPlayerText(game.currentPlayer))
+    let winner = $derived(getWinnerPlayer(game.winner.winner))
+    
+    let winnerCardHeight = $state();
     let boardImageHeight = $state();
     let turnImageHeight = $state(); 
 </script>
@@ -76,12 +87,27 @@
                 {/each}
             {/each}
         </div>
-        <div class="absolute w-full z-50 flex justify-center" style={`bottom: -${turnImageHeight / 6 * 5}px;`}>
-            <img bind:clientHeight={turnImageHeight} src={game.currentPlayer == 'PlayerOne' ? turnBackgroundRed : turnBackgroundYellow} alt="">
-            <div class={`absolute py-8 flex flex-col gap-4 font-spaceGrotesk ${game.currentPlayer == 'PlayerOne' ? ' text-white' : ''}`}>
-                <p class=" font-bold">{currentPlayerText}</p>
-                <p class="font-extrabold text-4xl text-center">{game.turnTimer.time}S</p>
-            </div>
+        <div class="absolute w-full z-50 flex justify-center" style={`${game.winner.winner ? `bottom: -${winnerCardHeight - 20}px;` : `bottom: -${turnImageHeight / 6 * 5}px;`}`}>
+            {#if game.winner.winner}
+                <div bind:clientHeight={winnerCardHeight} class="w-8/12 flex flex-col justify-center text-center font-spaceGrotesk bg-white player-card p-4">
+                    <div class="mb-2">
+                        {#if game.winner.winner == 'draw'}
+                            <p class="font-bold text-base">NOBODY WINS</p>
+                            <p class=" font-extrabold text-6xl">IT'S A DRAW</p>
+                        {:else}
+                            <p class="font-bold text-base">{winner}</p>
+                            <p class=" font-extrabold text-6xl">WINS</p>
+                        {/if}
+                    </div>
+                    <button class=" rounded-lg font-spaceGrotesk flex justify-center items-center p-4 text-white font-bold bg-mainPurple mx-auto max-h-[40px] text-base text-justify" on:click={game.playAgain}>PLAY AGAIN</button>
+                </div>
+            {:else}
+                <img bind:clientHeight={turnImageHeight} src={game.currentPlayer == 'PlayerOne' ? turnBackgroundRed : turnBackgroundYellow} alt="">
+                <div class={`absolute py-8 flex flex-col gap-4 font-spaceGrotesk ${game.currentPlayer == 'PlayerOne' ? ' text-white' : ''}`}>
+                    <p class=" font-bold">{currentPlayerText}</p>
+                    <p class="font-extrabold text-4xl text-center">{game.turnTimer.time}S</p>
+                </div>
+            {/if}
         </div>
     </div>
 </div>
