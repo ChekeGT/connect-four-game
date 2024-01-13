@@ -172,6 +172,30 @@ function createGame(){
         }
     }
 
+    function setTimer(timerTime){
+        clearInterval(turnTimer.timer)
+        turnTimer.time = timerTime;
+        turnTimer.timer = setInterval(() => {
+            turnTimer.time--;
+            if (turnTimer.time == 0){
+                switchCurrentPlayer()
+                setTimer(30)
+            }
+        }, 1000)
+    }
+
+    function resetBoard(){
+        // We can not create a new board, because it gets passed as reference on the state.
+        // So if we create a new one it will not trigger a render. really dont know why
+        for (let r = 0; r < board.length; r++){
+            let row = board[r]
+            for (let c = 0; c < row.length; c++ ){
+                board[r][c] = 'empty'
+            }
+        }
+        currentPlayer = 'PlayerOne'
+        setTimer(30)
+    }
     return {
         get gameMode(){
             return gameMode;
@@ -181,16 +205,13 @@ function createGame(){
         get gameState(){return gameState},
         set gameState(v){
             if (v == 'initialMenu' || v == 'showRules'){
-                clearTimeout(turnTimer.timer);
+                clearInterval(turnTimer.timer);
                 turnTimer.time = 0;
                 turnTimer.timer = 0;
-            }else if(v == 'playing'){
-                turnTimer.timer = setTimeout(() => {
-                    turnTimer.time--;
-                }, 1000);
+            }else if (v == 'playing' && gameState == "playingMenu"){
+                setTimer(turnTimer.time)
             }else{
-                clearTimeout(turnTimer.timer);
-                turnTimer.timer = 0;
+                setTimer(30)
             }
             gameState = v
         },
@@ -200,7 +221,8 @@ function createGame(){
         get playerTwoScore(){return playerTwoScore},
         switchGameMode,
         playPiece,
-        switchCurrentPlayer
+        switchCurrentPlayer,
+        resetBoard
     }
 }
 

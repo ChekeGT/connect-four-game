@@ -7,27 +7,6 @@
     import counterRedSmall from '../assets/images/counter-red-small.svg';
     import counterYellowSmall from '../assets/images/counter-yellow-small.svg';
 
-    function clearTimerAndSwitchPlayer(gameState){
-        if (gameState == 'playing'){
-            clearInterval(game.turnTimer.timer)
-            game.turnTimer.time = 30
-            game.switchCurrentPlayer();
-            game.turnTimer.timer = setInterval(() => {
-                game.turnTimer.time--
-            }, 1000);
-        }
-    }
-
-    function generateMatrix(){
-        let matrix = []
-        for (let r = 0; r <= 5 ; r++) {
-            matrix.push([])
-            for (let c = 0; c <= 6; c++) {
-                matrix[r].push(`${r},${c}`)
-            }
-        }
-        return matrix
-    }
     function isWinnerPiece(rowIndex, colIndex){
         if (game.winner.pieces.length > 0){
             for (let i = 0; i < game.winner.pieces.length; i++) {
@@ -48,7 +27,7 @@
     <div class="flex justify-between text-white font-spaceGrotesk text-xl font-bold">
         <button class=" rounded-[20px] bg-darkPurple min-w-[108px]">MENU</button>
         <img class="w-[40px] h-[40px]" src={logoSvg} alt="">
-        <button class=" rounded-[20px] bg-darkPurple min-w-[108px]">RESTART</button>
+        <button on:click={game.resetBoard} class=" rounded-[20px] bg-darkPurple min-w-[108px]">RESTART</button>
     </div>
     <div class=" flex justify-between font-spaceGrotesk px-4">
         <div class="player-card text-center p-2 min-w-[142px] h-[81px] relative">
