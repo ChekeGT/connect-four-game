@@ -3,14 +3,12 @@
     import playerOne from '../assets/images/player-one.svg';
     import playerTwo from '../assets/images/player-two.svg';
     import { game } from '../store.svelte'
+    import boardLayerSmall from '../assets/images/board-layer-white-small.svg';
+    import counterRedSmall from '../assets/images/counter-red-small.svg';
+    import counterYellowSmall from '../assets/images/counter-yellow-small.svg';
 
-    $effect(() => {
-        game.gameState;
-        clearTimerAndSwitchPlayer()
-    })
-
-    function clearTimerAndSwitchPlayer(){
-        if (game.gameState == 'playing'){
+    function clearTimerAndSwitchPlayer(gameState){
+        if (gameState == 'playing'){
             clearInterval(game.turnTimer.timer)
             game.turnTimer.time = 30
             game.switchCurrentPlayer();
@@ -18,6 +16,32 @@
                 game.turnTimer.time--
             }, 1000);
         }
+    }
+
+    function generateMatrix(){
+        let matrix = []
+        for (let r = 0; r <= 5 ; r++) {
+            matrix.push([])
+            for (let c = 0; c <= 6; c++) {
+                matrix[r].push(`${r},${c}`)
+            }
+        }
+        return matrix
+    }
+    function isWinnerPiece(rowIndex, colIndex){
+        if (game.winner.pieces.length > 0){
+            for (let i = 0; i < game.winner.pieces.length; i++) {
+                // @ts-ignore
+                let winnerPiece = game.winner.pieces[i]
+                let rowWinnerPiece = winnerPiece[0]
+                let colWinnerPiece = winnerPiece[1]
+                if (rowWinnerPiece == rowIndex && colWinnerPiece == colIndex){
+                    return true
+                }
+            }
+        }
+        return false
+    
     }
 </script>
 <div class="w-11/12 mx-auto py-10 flex flex-col gap-8">
@@ -29,13 +53,34 @@
     <div class=" flex justify-between font-spaceGrotesk px-4">
         <div class="player-card text-center p-2 min-w-[142px] h-[81px] relative">
             <p class="font-bold">PLAYER 1</p>
-            <p class="font-bold text-3xl">12</p>
+            <p class="font-bold text-3xl">{game.playerOneScore}</p>
             <img class="absolute top-[50%] translate-y-[-50%] translate-x-[-65%] w-[35%]" src={playerOne} alt="" />
         </div>
         <div class="player-card text-center p-2 min-w-[142px] relative">
             <p class="font-bold">PLAYER 2</p>
-            <p class="font-bold text-3xl">12</p>
+            <p class="font-bold text-3xl">{game.playerTwoScore}</p>
             <img class="absolute top-[50%] translate-y-[-50%] right-0 translate-x-[50%] w-[35%]" src={playerTwo} alt="" />
+        </div>
+    </div>
+    <div class="relative w-full">
+        <img class="absolute z-40" src={boardLayerSmall} alt="A connect four gaming board.">
+        <div class="grid grid-cols-7 grid-rows-6 absolute h-[305.367px] w-full gap-1 pb-[8%] pt-[2%] px-[2%]">
+            {#each game.board as row, rowIndex }
+                {#each row as colValue, colIndex}
+                    <div class="relative">
+                        {#if colValue == 'empty'}
+                            <button class="absolute w-full h-full z-40" on:click={() => game.playPiece(rowIndex, colIndex)}></button>
+                        {:else}
+                            <img class="absolute z-10" src={colValue == 'PlayerOne' ? counterRedSmall : counterYellowSmall} alt="A red counter.">
+                            <div class={`absolute z-20 ${colValue == 'PlayerOne' ? 'bg-mainRed' : 'bg-mainYellow'} w-full h-full flex justify-center items-center`}>
+                                {#if isWinnerPiece(rowIndex, colIndex)}
+                                    <div id={game.winner.winner} class="w-[33%] h-[33%] border-[3px] border-solid border-white rounded-full"></div>
+                                {/if}
+                            </div>
+                        {/if}
+                    </div>
+                {/each}
+            {/each}
         </div>
     </div>
 </div>
