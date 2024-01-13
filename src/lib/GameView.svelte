@@ -6,6 +6,8 @@
     import boardLayerSmall from '../assets/images/board-layer-white-small.svg';
     import counterRedSmall from '../assets/images/counter-red-small.svg';
     import counterYellowSmall from '../assets/images/counter-yellow-small.svg';
+    import turnBackgroundRed from '../assets/images/turn-background-red.svg';
+    import turnBackgroundYellow from '../assets/images/turn-background-yellow.svg';
 
     function isWinnerPiece(rowIndex, colIndex){
         if (game.winner.pieces.length > 0){
@@ -22,6 +24,19 @@
         return false
     
     }
+
+    function getCurrentPlayerText(currentPlayer){
+        if (currentPlayer == 'PlayerOne'){
+            return 'PLAYER 1\'S TURN'
+        } else {
+            return 'PLAYER 2\'S TURN'
+        }
+    }
+
+    let currentPlayerText = $derived(getCurrentPlayerText(game.currentPlayer))
+
+    let boardImageHeight = $state();
+    let turnImageHeight = $state(); 
 </script>
 <div class="w-11/12 mx-auto py-10 flex flex-col gap-8">
     <div class="flex justify-between text-white font-spaceGrotesk text-xl font-bold">
@@ -41,8 +56,8 @@
             <img class="absolute top-[50%] translate-y-[-50%] right-0 translate-x-[50%] w-[35%]" src={playerTwo} alt="" />
         </div>
     </div>
-    <div class="relative w-full">
-        <img class="absolute z-40" src={boardLayerSmall} alt="A connect four gaming board.">
+    <div class="relative w-full" style={`height: ${boardImageHeight}px;`}>
+        <img bind:clientHeight={boardImageHeight} class="absolute z-40" src={boardLayerSmall} alt="A connect four gaming board.">
         <div class="grid grid-cols-7 grid-rows-6 absolute h-[305.367px] w-full gap-1 pb-[8%] pt-[2%] px-[2%]">
             {#each game.board as row, rowIndex }
                 {#each row as colValue, colIndex}
@@ -60,6 +75,13 @@
                     </div>
                 {/each}
             {/each}
+        </div>
+        <div class="absolute w-full z-50 flex justify-center" style={`bottom: -${turnImageHeight / 6 * 5}px;`}>
+            <img bind:clientHeight={turnImageHeight} src={game.currentPlayer == 'PlayerOne' ? turnBackgroundRed : turnBackgroundYellow} alt="">
+            <div class={`absolute py-8 flex flex-col gap-4 font-spaceGrotesk ${game.currentPlayer == 'PlayerOne' ? ' text-white' : ''}`}>
+                <p class=" font-bold">{currentPlayerText}</p>
+                <p class="font-extrabold text-4xl text-center">{game.turnTimer.time}S</p>
+            </div>
         </div>
     </div>
 </div>

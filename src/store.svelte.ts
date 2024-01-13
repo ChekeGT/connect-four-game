@@ -169,7 +169,9 @@ function createGame(){
         if (isPieceTheLastOne(row, column)){
             board[row][column] = currentPlayer;
             switchCurrentPlayer();
+            setTimer(30)
         }
+        
     }
 
     function setTimer(timerTime){
@@ -219,6 +221,7 @@ function createGame(){
         set turnTimer(v){turnTimer = v},
         get playerOneScore(){return playerOneScore},
         get playerTwoScore(){return playerTwoScore},
+        get currentPlayer(){return currentPlayer},
         switchGameMode,
         playPiece,
         switchCurrentPlayer,
