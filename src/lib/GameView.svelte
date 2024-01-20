@@ -34,7 +34,6 @@
     }
 
     function getWinnerPlayer(winner){
-        console.log(game.winner.winner);
         if (winner == 'PlayerOne'){
             return 'PLAYER 1'
         }else{
@@ -47,6 +46,7 @@
     
     let winnerCardHeight = $state();
     let boardImageHeight = $state();
+    let boardImageWidth = $state();
     let turnImageHeight = $state(); 
     let containerHeight = $state();
 </script>
@@ -69,14 +69,14 @@
         </div>
     </div>
     <div class="relative w-full" style={`height: ${boardImageHeight}px;`}>
-        <img bind:clientHeight={boardImageHeight} class="absolute z-40" src={boardLayerSmall} alt="A connect four gaming board.">
-        <div class="grid grid-cols-7 grid-rows-6 absolute h-[305.367px] w-full gap-1 pb-[8%] pt-[2%] px-[2%]">
+        <!-- BOARD -->
+        <img bind:clientHeight={boardImageHeight} bind:clientWidth={boardImageWidth} class="absolute z-40 left-[50%] translate-x-[-50%]" src={boardLayerSmall} alt="A connect four gaming board.">
+        <!-- PLAYED PIECES -->
+        <div style={`height: ${boardImageHeight}px; width:${boardImageWidth}px;`} class="grid grid-cols-7 grid-rows-6 absolute  w-full gap-1 pb-[8%] pt-[2%] px-[2%] left-[50%] translate-x-[-50%]">
             {#each game.board as row, rowIndex }
                 {#each row as colValue, colIndex}
                     <div class="relative">
-                        {#if colValue == 'empty'}
-                            <button class="absolute w-full h-full z-40" on:click={() => game.playPiece(rowIndex, colIndex)}></button>
-                        {:else}
+                        {#if colValue != 'empty'}
                             <img class="absolute z-10" src={colValue == 'PlayerOne' ? counterRedSmall : counterYellowSmall} alt="A red counter.">
                             <div class={`absolute z-20 ${colValue == 'PlayerOne' ? 'bg-mainRed' : 'bg-mainYellow'} w-full h-full flex justify-center items-center`}>
                                 {#if isWinnerPiece(rowIndex, colIndex)}
@@ -88,6 +88,13 @@
                 {/each}
             {/each}
         </div>
+        <!-- COLUMN SELECTOR / PLAY PIECE BUTTONS -->
+        <div style={`height: ${boardImageHeight}px; width:${boardImageWidth}px;`} class=" grid grid-cols-7 z-50 absolute gap-1 pb-[8%] pt-[2%] px-[2%] left-[50%] translate-x-[-50%]">
+            {#each Array(7) as _, columnIndex}
+                <button class="h-full w-full" on:click={() => {game.playPiece(columnIndex)}} ></button>
+            {/each}
+        </div>
+        <!-- Winner badge -->
         <div class="absolute w-full z-50 flex justify-center" style={`${game.winner.winner ? `bottom: -${winnerCardHeight - 20}px;` : `bottom: -${turnImageHeight / 6 * 5}px;`}`}>
             {#if game.winner.winner}
                 <div bind:clientHeight={winnerCardHeight} class="w-8/12 flex flex-col justify-center text-center font-spaceGrotesk bg-white player-card p-4">

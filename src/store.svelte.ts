@@ -119,7 +119,6 @@ function createGame(){
             pieces: []
         };
         const lines = [...getDiagonals(), ...getRows(), ...getColumns()];
-        console.log(...getRows())
         lines.forEach(line => {
             let playerOnePieces = [];
             let playerTwoPieces = [];
@@ -169,28 +168,20 @@ function createGame(){
         }
     }
 
-    function playPiece(row:number, column: number){
+    function playPiece(column: number){
         if (gameState == 'gameOver'){
             return;
         }
-        const isPieceTheLastOne = (row:number, column:number) => {
-            if (row == 0){
-                if (board[1][column] != 'empty'){
-                    return true;
-                }
-                return false;
+        let row = 5;
+        while (board[row][column] != 'empty'){
+            row--;
+            if (row < 0){
+                return;
             }
-            if (row == 5){
-                return true;
-            }
-            return board[row + 1][column] != 'empty';
         }
-        if (isPieceTheLastOne(row, column)){
-            board[row][column] = currentPlayer;
-            switchCurrentPlayer();
-            setTimer(30)
-        }
-        
+        board[row][column] = currentPlayer;
+        switchCurrentPlayer();
+        setTimer(30)
     }
 
     function setTimer(timerTime){
