@@ -32,7 +32,7 @@ function createBoard(){
 function createGame(){
     let gameMode: GameMode = $state("PvP");
     let gameState: gameStates = $state('initialMenu');
-    
+    let shouldAddToScore: boolean = $state(false);
 
     let currentPlayer: playerTypes = $state('PlayerOne');
     let playerOneScore: number = $state(0);
@@ -143,12 +143,13 @@ function createGame(){
                 winner = ({winner: 'PlayerTwo', pieces: playerTwoPieces});
             }
         });
-        if (winner.winner && gameState != 'gameOver'){
+        if (winner.winner && shouldAddToScore){
             if (winner.winner == 'PlayerOne'){
                 playerOneScore++;
             }else{
                 playerTwoScore++;
             }
+            shouldAddToScore = false;
             gameState = 'gameOver';
             clearInterval(turnTimer.timer);
         }else if (board.every(row => row.every(column => column != 'empty'))){
@@ -207,12 +208,14 @@ function createGame(){
         }
         currentPlayer = 'PlayerOne'
         gameState = 'playing'
+        shouldAddToScore = true;
         setTimer(30)
     }
 
     function playAgain(){
         resetBoard()
         gameState = 'playing'
+        shouldAddToScore = true;
     }
     return {
         get gameMode(){
@@ -223,13 +226,16 @@ function createGame(){
         get gameState(){return gameState},
         set gameState(v){
             if (v == 'initialMenu' || v == 'showRules'){
-                clearInterval(turnTimer.timer);
-                turnTimer.time = 0;
-                turnTimer.timer = 0;
+                playerOneScore = 0;
+                playerTwoScore = 0;
+                resetBoard();
             }else if (v == 'playing' && gameState == "playingMenu"){
                 setTimer(turnTimer.time)
+            }else if ( v == 'playingMenu' && (gameState == 'playing' || gameState == 'gameOver')){
+                clearInterval(turnTimer.timer);
             }else{
                 setTimer(30)
+                shouldAddToScore = true;
             }
             gameState = v
         },
