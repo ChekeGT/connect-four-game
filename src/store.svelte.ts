@@ -143,7 +143,7 @@ function createGame(){
                 winner = ({winner: 'PlayerTwo', pieces: playerTwoPieces});
             }
         });
-        if (winner.winner){
+        if (winner.winner && gameState != 'gameOver'){
             if (winner.winner == 'PlayerOne'){
                 playerOneScore++;
             }else{

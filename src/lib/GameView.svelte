@@ -8,6 +8,8 @@
     import counterYellowSmall from '../assets/images/counter-yellow-small.svg';
     import turnBackgroundRed from '../assets/images/turn-background-red.svg';
     import turnBackgroundYellow from '../assets/images/turn-background-yellow.svg';
+    import markerRed from '../assets/images/marker-red.svg';
+    import markerYellow from '../assets/images/marker-yellow.svg';
 
     function isWinnerPiece(rowIndex, colIndex){
         if (game.winner.pieces.length > 0){
@@ -43,7 +45,13 @@
 
     let currentPlayerText = $derived(getCurrentPlayerText(game.currentPlayer))
     let winner = $derived(getWinnerPlayer(game.winner.winner))
-    
+
+    let selectedColumn = $state(null);
+
+    function setSelectedColumnToNull(){
+        selectedColumn = null
+    }
+
     let winnerCardHeight = $state();
     let boardImageHeight = $state();
     let boardImageWidth = $state();
@@ -89,9 +97,14 @@
             {/each}
         </div>
         <!-- COLUMN SELECTOR / PLAY PIECE BUTTONS -->
-        <div style={`height: ${boardImageHeight}px; width:${boardImageWidth}px;`} class=" grid grid-cols-7 z-50 absolute gap-1 pb-[8%] pt-[2%] px-[2%] left-[50%] translate-x-[-50%]">
+        <div on:mouseleave={setSelectedColumnToNull} role="application" style={`height: ${boardImageHeight}px; width:${boardImageWidth}px;`} class=" grid grid-cols-7 z-50 gap-1 absolute pb-[8%] pt-[2%] px-[2%] left-[50%] translate-x-[-50%]">
             {#each Array(7) as _, columnIndex}
-                <button class="h-full w-full" on:click={() => {game.playPiece(columnIndex)}} ></button>
+                <div class="relative">
+                    {#if selectedColumn == columnIndex}
+                        <img class="absolute z-30" style={`top: 0; transform: translateY(-${boardImageHeight / 9}px);`} src={game.currentPlayer == 'PlayerOne' ? markerRed : markerYellow} alt="A red marker.">
+                    {/if}
+                    <button class="h-full w-full" on:click={() => {game.playPiece(columnIndex)}}  on:mouseenter ={() => {selectedColumn = columnIndex}} aria-label={`Column ${columnIndex + 1}`}></button>
+                </div>
             {/each}
         </div>
         <!-- Winner badge -->
