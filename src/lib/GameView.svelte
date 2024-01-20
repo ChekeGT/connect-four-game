@@ -1,15 +1,15 @@
 <script>
+    import { game } from '../store.svelte'
     import logoSvg from '../assets/images/logo.svg'; 
     import playerOne from '../assets/images/player-one.svg';
     import playerTwo from '../assets/images/player-two.svg';
-    import { game } from '../store.svelte'
     import boardLayerSmall from '../assets/images/board-layer-white-small.svg';
-    import counterRedSmall from '../assets/images/counter-red-small.svg';
-    import counterYellowSmall from '../assets/images/counter-yellow-small.svg';
     import turnBackgroundRed from '../assets/images/turn-background-red.svg';
     import turnBackgroundYellow from '../assets/images/turn-background-yellow.svg';
     import markerRed from '../assets/images/marker-red.svg';
     import markerYellow from '../assets/images/marker-yellow.svg';
+    import GameViewMenu from './GameViewMenu.svelte';
+    import BlackFilter from './BlackFilter.svelte';
 
     function isWinnerPiece(rowIndex, colIndex){
         if (game.winner.pieces.length > 0){
@@ -57,10 +57,14 @@
     let boardImageWidth = $state();
     let turnImageHeight = $state(); 
     let containerHeight = $state();
+    let bottomImageColor = $derived(game.winner.winner == 'PlayerOne' ? 'bg-mainRed' : game.winner.winner == 'PlayerTwo' ? 'bg-mainYellow' : 'bg-darkPurple')
 </script>
+{#if game.gameState == 'playingMenu'}
+    <BlackFilter/>
+{/if}
 <div bind:clientHeight={containerHeight} class="w-11/12 mx-auto py-10 flex flex-col gap-8">
     <div class="flex justify-between text-white font-spaceGrotesk text-xl font-bold">
-        <button class=" rounded-[20px] bg-darkPurple min-w-[108px]">MENU</button>
+        <button on:click={() => {game.gameState = 'playingMenu'}} class=" rounded-[20px] bg-darkPurple min-w-[108px]">MENU</button>
         <img class="w-[40px] h-[40px]" src={logoSvg} alt="">
         <button on:click={game.resetBoard} class=" rounded-[20px] bg-darkPurple min-w-[108px]">RESTART</button>
     </div>
@@ -77,7 +81,10 @@
         </div>
     </div>
     <div class="relative w-full" style={`height: ${boardImageHeight}px;`}>
-        <!-- BOARD -->
+        {#if game.gameState == 'playingMenu'}
+            <GameViewMenu minHeight={boardImageHeight}/>
+        {/if}
+     <!-- BOARD -->
         <img bind:clientHeight={boardImageHeight} bind:clientWidth={boardImageWidth} class="absolute z-40 left-[50%] translate-x-[-50%]" src={boardLayerSmall} alt="A connect four gaming board.">
         <!-- PLAYED PIECES -->
         <div style={`height: ${boardImageHeight}px; width:${boardImageWidth}px;`} class="grid grid-cols-7 grid-rows-6 absolute  w-full gap-1 pb-[8%] pt-[2%] px-[2%] left-[50%] translate-x-[-50%]">
@@ -85,8 +92,7 @@
                 {#each row as colValue, colIndex}
                     <div class="relative">
                         {#if colValue != 'empty'}
-                            <img class="absolute z-10" src={colValue == 'PlayerOne' ? counterRedSmall : counterYellowSmall} alt="A red counter.">
-                            <div class={`absolute z-20 ${colValue == 'PlayerOne' ? 'bg-mainRed' : 'bg-mainYellow'} w-full h-full flex justify-center items-center`}>
+                            <div class={`absolute z-20 ${colValue == 'PlayerOne' ? 'bg-mainRed' : 'bg-mainYellow'} w-full h-full flex justify-center items-center rounded-full`}>
                                 {#if isWinnerPiece(rowIndex, colIndex)}
                                     <div id={game.winner.winner} class="w-[33%] h-[33%] border-[3px] border-solid border-white rounded-full"></div>
                                 {/if}
@@ -132,7 +138,7 @@
         </div>
     </div>
 </div>
-<div class={`absolute bottom-0 w-full rectangle ${game.winner.winner == 'PlayerOne' ? 'bg-mainRed' : game.winner.winner == 'PlayerTwo' ? 'bg-mainYellow' : 'bg-darkPurple'}`} style={`height: ${window.innerHeight - containerHeight + 16 * 4 }px`}>
+<div class={`absolute bottom-0 w-full rectangle ${bottomImageColor}`} style={`height: ${window.innerHeight - containerHeight + 16 * 4 }px`}>
 </div>
 
 <style>
