@@ -43,7 +43,7 @@ function createGame(){
     let winner: winnerInteface = $derived(getWinner(board));
 
     const switchCurrentPlayer = () => {currentPlayer = currentPlayer == 'PlayerOne' ? 'PlayerTwo' : 'PlayerOne';}
-    function getColumns() {
+    function getColumns(board: Array<Array<pieces>>) {
         let columns = [];
         for (let c = 0; c <= 6; c++) {
             let column = [];
@@ -56,7 +56,7 @@ function createGame(){
         return columns;
     }
 
-    function getRows() {
+    function getRows(board: Array<Array<pieces>>) {
         let rows = []
         for (let r = 0; r <= 5; r++) {
             let row = [];
@@ -69,7 +69,7 @@ function createGame(){
         return rows; 
     }
 
-    function getDiagonals() {
+    function getDiagonals(board: Array<Array<pieces>>) {
     let matrix = board;
     let diagonals = [];
     // Get diagonals from top-left to bottom-right
@@ -118,7 +118,7 @@ function createGame(){
             winner: null,
             pieces: []
         };
-        const lines = [...getDiagonals(), ...getRows(), ...getColumns()];
+        const lines = [...getDiagonals(board), ...getRows(board), ...getColumns(board)];
         lines.forEach(line => {
             let playerOnePieces = [];
             let playerTwoPieces = [];
@@ -248,7 +248,10 @@ function createGame(){
         playPiece,
         switchCurrentPlayer,
         resetBoard,
-        playAgain
+        playAgain,
+        getRows,
+        getColumns,
+        getDiagonals
     }
 }
 

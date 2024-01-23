@@ -10,6 +10,7 @@
     import markerYellow from '../assets/images/marker-yellow.svg';
     import GameViewMenu from './GameViewMenu.svelte';
     import BlackFilter from './BlackFilter.svelte';
+    import { computateMinimax } from './minimax';
 
     function isWinnerPiece(rowIndex, colIndex){
         if (game.winner.pieces.length > 0){
@@ -58,6 +59,16 @@
     let turnImageHeight = $state(); 
     let containerHeight = $state();
     let bottomImageColor = $derived(game.winner.winner == 'PlayerOne' ? 'bg-mainRed' : game.winner.winner == 'PlayerTwo' ? 'bg-mainYellow' : 'bg-darkPurple')
+
+    function calculateCPUMovement(currentPlayer){
+        if (currentPlayer == 'PlayerTwo' && game.gameMode == 'PvE'){
+            let minimaxResult = computateMinimax()
+            game.playPiece(minimaxResult)
+        }
+    }
+    $effect(() => {
+        calculateCPUMovement(game.currentPlayer)
+    })
 </script>
 {#if game.gameState == 'playingMenu'}
     <BlackFilter/>
