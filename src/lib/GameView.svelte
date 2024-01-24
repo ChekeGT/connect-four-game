@@ -80,12 +80,12 @@
     <BlackFilter/>
 {/if}
 <div bind:clientHeight={containerHeight} class="w-11/12 mx-auto py-10 flex flex-col gap-8">
-    <div class="flex justify-between text-white font-spaceGrotesk text-xl font-bold">
+    <div style={`width: ${boardImageWidth}px;`} class="flex justify-between text-white font-spaceGrotesk text-xl font-bold mx-auto">
         <button on:click={() => {game.gameState = 'playingMenu'}} class=" rounded-[20px] bg-darkPurple min-w-[108px]">MENU</button>
         <img class="w-[40px] h-[40px]" src={logoSvg} alt="">
         <button on:click={game.resetBoard} class=" rounded-[20px] bg-darkPurple min-w-[108px]">RESTART</button>
     </div>
-    <div class=" flex justify-between font-spaceGrotesk px-4">
+    <div class=" flex justify-between font-spaceGrotesk px-4 md:hidden gap-1">
         <div class="player-card text-center p-2 min-w-[142px] h-[81px] relative">
             <p class="font-bold">PLAYER 1</p>
             <p class="font-bold text-3xl">{game.playerOneScore}</p>
@@ -155,7 +155,7 @@
         </div>
     </div>
 </div>
-<div class={`absolute bottom-0 w-full rectangle ${bottomImageColor}`} style={`height: ${window.innerHeight - containerHeight + 16 * 4 }px`}>
+<div class={`absolute w-full rectangle ${bottomImageColor}`} style={`height: ${window.innerHeight - containerHeight + 16 * 4 + (window.innerWidth >= 768 ? 200 : 0)}px; bottom: ${window.innerWidth >= 768 ? -200 : 0}px`}>
 </div>
 
 <style>
