@@ -3,6 +3,7 @@
     import logoSvg from '../assets/images/logo.svg'; 
     import playerOne from '../assets/images/player-one.svg';
     import playerTwo from '../assets/images/player-two.svg';
+    import boardLayerLarge from '../assets/images/board-layer-white-large.svg';
     import boardLayerSmall from '../assets/images/board-layer-white-small.svg';
     import turnBackgroundRed from '../assets/images/turn-background-red.svg';
     import turnBackgroundYellow from '../assets/images/turn-background-yellow.svg';
@@ -59,6 +60,11 @@
     let turnImageHeight = $state(); 
     let containerHeight = $state();
     let bottomImageColor = $derived(game.winner.winner == 'PlayerOne' ? 'bg-mainRed' : game.winner.winner == 'PlayerTwo' ? 'bg-mainYellow' : 'bg-darkPurple')
+    let columnWidth = $state();
+
+    function getColumnStyling(columnWidth, boardImageHeight){
+        return  window.innerWidth <= 1000 ? `transform: translateY(-${boardImageHeight / 9}px);` : `transform: translate(${columnWidth / 4}px,-${boardImageHeight / 15}px);`
+    }
 
     function calculateCPUMovement(currentPlayer){
         if (currentPlayer == 'PlayerTwo' && game.gameMode == 'PvE'){
@@ -96,9 +102,9 @@
             <GameViewMenu minHeight={boardImageHeight}/>
         {/if}
      <!-- BOARD -->
-        <img bind:clientHeight={boardImageHeight} bind:clientWidth={boardImageWidth} class="absolute z-40 left-[50%] translate-x-[-50%]" src={boardLayerSmall} alt="A connect four gaming board.">
+        <img bind:clientHeight={boardImageHeight} bind:clientWidth={boardImageWidth} class="absolute z-40 left-[50%] translate-x-[-50%]" src={window.innerWidth <= 1000 ? boardLayerSmall : boardLayerLarge} alt="A connect four gaming board.">
         <!-- PLAYED PIECES -->
-        <div style={`height: ${boardImageHeight}px; width:${boardImageWidth}px;`} class="grid grid-cols-7 grid-rows-6 absolute  w-full gap-1 pb-[8%] pt-[2%] px-[2%] left-[50%] translate-x-[-50%]">
+        <div style={`height: ${boardImageHeight}px; width:${boardImageWidth}px;`} class="grid grid-cols-7 grid-rows-6 absolute  w-full gap-1 md:gap-0 md:pb-[4%] md:px-[1%] md:pt-[1%] pb-[8%] pt-[2%] px-[2%] left-[50%] translate-x-[-50%]">
             {#each game.board as row, rowIndex }
                 {#each row as colValue, colIndex}
                     <div class="relative">
@@ -114,11 +120,11 @@
             {/each}
         </div>
         <!-- COLUMN SELECTOR / PLAY PIECE BUTTONS -->
-        <div on:mouseleave={setSelectedColumnToNull} role="application" style={`height: ${boardImageHeight}px; width:${boardImageWidth}px;`} class=" grid grid-cols-7 z-50 gap-1 absolute pb-[8%] pt-[2%] px-[2%] left-[50%] translate-x-[-50%]">
+        <div on:mouseleave={setSelectedColumnToNull} role="application" style={`height: ${boardImageHeight}px; width:${boardImageWidth}px;`} class=" grid grid-cols-7 z-50 gap-1 absolute px-[2%] left-[50%] translate-x-[-50%] md:gap-[10px] md:px-[1%]">
             {#each Array(7) as _, columnIndex}
-                <div class="relative">
+                <div bind:clientWidth={columnWidth} class="relative">
                     {#if selectedColumn == columnIndex}
-                        <img class="absolute z-30" style={`top: 0; transform: translateY(-${boardImageHeight / 9}px);`} src={game.currentPlayer == 'PlayerOne' ? markerRed : markerYellow} alt="A red marker.">
+                        <img class="absolute z-30" style={`top: 0; ${getColumnStyling(columnWidth, boardImageHeight)} `} src={game.currentPlayer == 'PlayerOne' ? markerRed : markerYellow} alt="A red marker.">
                     {/if}
                     <button class="h-full w-full" on:click={() => {game.playPiece(columnIndex)}}  on:mouseenter ={() => {selectedColumn = columnIndex}} aria-label={`Column ${columnIndex + 1}`}></button>
                 </div>
