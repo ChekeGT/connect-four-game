@@ -4,7 +4,7 @@
     import Rules from "./lib/Rules.svelte";
     import { game } from "./store.svelte";
 </script>
-<main class="w-[100vw] h-[100vh] bg-mainPurple">
+<main class={`w-[100vw] h-[100vh] ${game.gameState == 'initialMenu' ? 'bg-darkPurple' : 'bg-mainPurple'}`}>
     {#if game.gameState == "initialMenu"}
         <InitialMenu/>
     {:else if game.gameState == "showRules"}

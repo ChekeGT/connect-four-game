@@ -155,7 +155,7 @@
         </div>
     </div>
 </div>
-<div class={`absolute w-full rectangle ${bottomImageColor}`} style={`height: ${window.innerHeight - containerHeight + 16 * 4 + (window.innerWidth >= 768 ? 200 : 0)}px; bottom: ${window.innerWidth >= 768 ? -200 : 0}px`}>
+<div class={`absolute w-full rectangle ${bottomImageColor}`} style={`height: ${window.innerHeight - containerHeight + 16 * 4 + (window.innerWidth >= 500 ? 200 : 0)}px; bottom: ${window.innerWidth >= 500 ? -200 : 0}px`}>
 </div>
 
 <style>

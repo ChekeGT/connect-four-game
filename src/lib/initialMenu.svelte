@@ -8,7 +8,7 @@
     let gameModeIcon = $derived(game.gameMode == 'PvP' ? playerVsPlayerSvg : playerVsCpuSvg);
 
 </script>
-<div class="w-full h-full flex items-center justify-center">
+<div id="initial-menu" class="w-full h-full flex items-center justify-center bg-mainPurple">
     <div class=" w-11/12 mx-auto flex flex-col gap-8">
         <div class="w-full flex justify-center">
             <img src={logoSvg} alt="">
@@ -34,5 +34,23 @@
         box-shadow: 0px 10px 0px 0px #000;
         border: 3px solid var(--Black, #000);
         border-radius: 20px;
+    }
+    @media(min-width: 768px){
+        #initial-menu{
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 20px;
+            border: 3px solid var(--Black, #000);
+            box-shadow: 0px 10px 0px 0px #000;
+            height: 435px;
+            width: 50%;
+        }
+    }
+    @media (min-width: 1024px){
+        #initial-menu{
+            width: 40%;
+        }
     }
 </style>
