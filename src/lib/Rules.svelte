@@ -4,11 +4,11 @@
     let checkMarkHeight = $state();
 </script>
 <div class="flex w-full h-full justify-center items-center">
-    <div class="rules-container w-11/12 min-h-[80%] font-spaceGrotesk p-5 relative">
-        <p class=" text-3xl text-center font-bold mb-10">Rules</p>
-        <p class=" text-mainPurple text-3xl font-bold text-start mb-10">Objective</p>
-        <p class=" text-justify break-words text-lg mb-10">Be the first player to connect 4 of the same colored discs in a row(either vertically, horizontally, or diagonally).</p>
-        <p class=" text-mainPurple text-3xl font-bold mb-10">How To Play</p>
+    <div class="rules-container w-11/12 min-h-[80%] font-spaceGrotesk p-5 relative max-w-[480px] max-h-[537px]">
+        <p class=" text-3xl text-center font-bold mb-5">Rules</p>
+        <p class=" text-mainPurple text-3xl font-bold text-start mb-5">Objective</p>
+        <p class=" text-justify break-words text-lg mb-5">Be the first player to connect 4 of the same colored discs in a row(either vertically, horizontally, or diagonally).</p>
+        <p class=" text-mainPurple text-3xl font-bold mb-5">How To Play</p>
         <ol class="grid grid-cols-rules-grid">
             <span>1</span>
             <li class="text-lg mb-4">Red Goes first in the first game.</li>
@@ -19,7 +19,7 @@
             <span>4</span>
             <li class="text-lg mb-4">The starter of the previous game goes second on the next game.</li>
         </ol>
-        <button style={`bottom: -${checkMarkHeight / 2}px;`} bind:clientHeight={checkMarkHeight} on:click={() => {game.gameState = 'initialMenu'}} class="w-2/12 absolute left-[50%] translate-x-[-50%]">
+        <button style={`bottom: -${checkMarkHeight / 2}px;`} bind:clientHeight={checkMarkHeight} on:click={() => {game.gameState = 'initialMenu'}} class="w-[64px] h-[64px] absolute left-[50%] translate-x-[-50%]">
             <img src={checkmark} class="w-full" alt="">
         </button>
     </div>
