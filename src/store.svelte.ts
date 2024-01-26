@@ -69,9 +69,16 @@ function createGame(){
         return rows; 
     }
 
-    function getDiagonals(board: Array<Array<pieces>>) {
+    function getDiagonals(board: Array<Array<pieces>>, reverse=false) {
     let matrix = board;
     let diagonals = [];
+    if (reverse){
+        matrix = board.map(row => [...row].reverse())      
+    }else{
+        let reversedDiagonals = getDiagonals(board, true)
+        reversedDiagonals = reversedDiagonals.map(diagonal => diagonal.map(element => [[element[0][0], 6 - element[0][1]], element[1]]))
+        diagonals.push(...reversedDiagonals)
+    }
     // Get diagonals from top-left to bottom-right
     for (let i = 0; i < matrix.length; i++) {
         let diagonal = [];
@@ -149,6 +156,7 @@ function createGame(){
             }else{
                 playerTwoScore++;
             }
+            console.log(winner);
             shouldAddToScore = false;
             gameState = 'gameOver';
             clearInterval(turnTimer.timer);
