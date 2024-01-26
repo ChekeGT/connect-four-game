@@ -1,17 +1,16 @@
 <script>
-    import { game } from '../store.svelte'
-    import logoSvg from '../assets/images/logo.svg'; 
-    import playerOne from '../assets/images/player-one.svg';
-    import playerTwo from '../assets/images/player-two.svg';
-    import boardLayerLarge from '../assets/images/board-layer-white-large.svg';
-    import boardLayerSmall from '../assets/images/board-layer-white-small.svg';
-    import turnBackgroundRed from '../assets/images/turn-background-red.svg';
-    import turnBackgroundYellow from '../assets/images/turn-background-yellow.svg';
-    import markerRed from '../assets/images/marker-red.svg';
-    import markerYellow from '../assets/images/marker-yellow.svg';
-    import GameViewMenu from './GameViewMenu.svelte';
-    import BlackFilter from './BlackFilter.svelte';
+    import { game } from '../../store.svelte'
+    import boardLayerLarge from '../../assets/images/board-layer-white-large.svg';
+    import turnBackgroundRed from '../../assets/images/turn-background-red.svg';
+    import turnBackgroundYellow from '../../assets/images/turn-background-yellow.svg';
+    import markerRed from '../../assets/images/marker-red.svg';
+    import markerYellow from '../../assets/images/marker-yellow.svg';
+    import GameViewMenu from '../GameViewMenu.svelte';
+    import BlackFilter from '../BlackFilter.svelte';
     import { computateMinimax } from './minimax';
+    import Player1Marker from './Player1Marker.svelte';
+    import Player2Marker from './Player2Marker.svelte';
+    import ButtonMenu from './ButtonMenu.svelte';
 
     function isWinnerPiece(rowIndex, colIndex){
         if (game.winner.pieces.length > 0){
@@ -80,27 +79,21 @@
     <BlackFilter/>
 {/if}
 <div bind:clientHeight={containerHeight} class="w-11/12 mx-auto py-10 flex flex-col gap-8">
-    <div style={`width: ${boardImageWidth}px;`} class="flex justify-between text-white font-spaceGrotesk text-xl font-bold mx-auto">
-        <button on:click={() => {game.gameState = 'playingMenu'}} class=" rounded-[20px] bg-darkPurple min-w-[108px]">MENU</button>
-        <img class="w-[40px] h-[40px]" src={logoSvg} alt="">
-        <button on:click={game.resetBoard} class=" rounded-[20px] bg-darkPurple min-w-[108px]">RESTART</button>
-    </div>
-    <div class=" flex justify-between font-spaceGrotesk px-4 md:hidden gap-1">
-        <div class="player-card text-center p-2 min-w-[142px] h-[81px] relative">
-            <p class="font-bold">PLAYER 1</p>
-            <p class="font-bold text-3xl">{game.playerOneScore}</p>
-            <img class="absolute top-[50%] translate-y-[-50%] translate-x-[-65%] w-[35%]" src={playerOne} alt="" />
-        </div>
-        <div class="player-card text-center p-2 min-w-[142px] relative">
-            <p class="font-bold">PLAYER 2</p>
-            <p class="font-bold text-3xl">{game.playerTwoScore}</p>
-            <img class="absolute top-[50%] translate-y-[-50%] right-0 translate-x-[50%] w-[35%]" src={playerTwo} alt="" />
-        </div>
+    <ButtonMenu boardImageWidth={boardImageWidth}/>
+    <div style={`width: ${boardImageWidth}px`} class=" flex justify-between font-spaceGrotesk px-4 lg:hidden gap-1 mx-auto">
+        <Player1Marker/>
+        <Player2Marker/>
     </div>
     <div class="relative w-full" style={`height: ${boardImageHeight}px;`}>
         {#if game.gameState == 'playingMenu'}
             <GameViewMenu minHeight={boardImageHeight}/>
         {/if}
+        <div class=" hidden lg:block lg:absolute top-[50%] font-spaceGrotesk left-0">
+            <Player1Marker/>
+        </div>
+        <div class="hidden lg:block lg:absolute top-[50%] font-spaceGrotesk right-0">
+            <Player2Marker/>
+        </div>
      <!-- BOARD -->
         <img bind:clientHeight={boardImageHeight} bind:clientWidth={boardImageWidth} class="absolute z-40 left-[50%] translate-x-[-50%]" src={boardLayerLarge} alt="A connect four gaming board.">
         <!-- PLAYED PIECES -->

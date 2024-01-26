@@ -1,5 +1,5 @@
 <script>
-    import GameView from "./lib/GameView.svelte";
+    import GameView from "./lib/GameView/GameView.svelte";
     import InitialMenu from "./lib/initialMenu.svelte";
     import Rules from "./lib/Rules.svelte";
     import { game } from "./store.svelte";

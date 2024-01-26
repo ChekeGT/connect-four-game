@@ -1,4 +1,4 @@
-import { game } from "../store.svelte";
+import { game } from "../../store.svelte";
 
 function cloneBoard(board){
     let newBoard = []
