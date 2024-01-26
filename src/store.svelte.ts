@@ -224,6 +224,7 @@ function createGame(){
         resetBoard()
         gameState = 'playing'
         shouldAddToScore = true;
+        currentPlayer = currentPlayer == 'PlayerOne' ? 'PlayerTwo' : 'PlayerOne';
     }
     return {
         get gameMode(){
@@ -236,6 +237,7 @@ function createGame(){
             if (v == 'initialMenu' || v == 'showRules'){
                 playerOneScore = 0;
                 playerTwoScore = 0;
+                currentPlayer = 'PlayerOne';
                 resetBoard();
             }else if (v == 'playing' && gameState == "playingMenu"){
                 setTimer(turnTimer.time)

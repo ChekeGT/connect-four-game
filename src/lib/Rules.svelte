@@ -17,7 +17,7 @@
             <span>3</span>
             <li class="text-lg mb-4">The game ends when there is a 4-in-a-row or a stalemate.</li>
             <span>4</span>
-            <li class="text-lg mb-4">The starter of the previous game goes second on the next game.</li>
+            <li class="text-lg mb-4">The Winner of the previous game goes second on the next game.</li>
         </ol>
         <button style={`bottom: -${checkMarkHeight / 2}px;`} bind:clientHeight={checkMarkHeight} on:click={() => {game.gameState = 'initialMenu'}} class="w-[64px] h-[64px] absolute left-[50%] translate-x-[-50%]">
             <img src={checkmark} class="w-full" alt="">
